@@ -136,7 +136,6 @@ driver.quit()
 workbook.close()
    
     
- 
+driver.close()
 
 
-input('')
