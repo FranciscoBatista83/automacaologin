@@ -1,4 +1,3 @@
-from tabnanny import check
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.common.by import By
@@ -7,8 +6,7 @@ import openpyxl
 from time import sleep
 import random
 from datetime import datetime
-import tkinter
-from tkinter import messagebox
+
 
 
 def iniciar_driver():
@@ -27,9 +25,6 @@ def iniciar_driver():
 
     return driver
 
-
-driver = iniciar_driver()
-
 def digitar_naturalmente(texto, elemento):
     for letra in texto:
         elemento.send_keys(letra)
@@ -39,11 +34,23 @@ def verifica_campo(campo, nome_campo):
     if not campo.get_attribute('value'):
         raise ValueError(f"O campo '{nome_campo}' não foi preenchido corretamente.")
 
-
 def linha_completa(row):
     return all(campo not in [None, ''] for campo in row)
 
+def cadastrar_item(value, xpath, frase):
+    item = driver.find_element(By.XPATH, xpath)
+       
+    if isinstance(value, datetime):
+        valor_formatado = value.strftime("%d-%m-%Y")
+        item.send_keys(valor_formatado)
+    else:
+        digitar_naturalmente(value, item)  
 
+    verifica_campo(item, frase)
+    sleep(1)
+
+
+driver = iniciar_driver()
 
 driver.get('https://sistemalogin.franciscobatista.com')
 sleep(2)
@@ -92,40 +99,13 @@ for row in sheet.iter_rows(min_row=2, values_only=True):  # Começa na linha 2
 
         sleep(1)
 
-        nome_produto = driver.find_element(By.XPATH, "//input[@id='nomeProduto']")
-        digitar_naturalmente(nome_produto_value, nome_produto)
-        verifica_campo(nome_produto, "Nome produto")
-        sleep(1)
+        cadastrar_item(nome_produto_value, "//input[@id='nomeProduto']", "Nome produto" )
+        cadastrar_item(str(valor_value), "//input[@id='valor']", "Valor" )
+        cadastrar_item(str(quantidade_value), "//input[@id='quantidade']", "Quantidade" )
+        cadastrar_item(fornecedor_value, "//input[@id='fornecedor']", "Fornecedor")
+        cadastrar_item(data_value, "//input[@id='produtoData']", "Data")
 
-        valor = driver.find_element(By.XPATH, "//input[@id='valor']")
-        digitar_naturalmente(str(valor_value), valor)
-        verifica_campo(valor, "Valor")
-        sleep(1)
-
-        quantidade = driver.find_element(By.XPATH, "//input[@id='quantidade']")
-        digitar_naturalmente(str(quantidade_value), quantidade)
-        verifica_campo(quantidade, "Quantidade")
-        sleep(1)
-
-        fornecedor = driver.find_element(By.XPATH, "//input[@id='fornecedor']")
-        digitar_naturalmente(fornecedor_value, fornecedor)
-        verifica_campo(fornecedor, "Fornecedor")
-        sleep(1)
-
-        data = driver.find_element(By.XPATH, "//input[@id='produtoData']")
-        # Formata a data somente se for um objeto datetime
-        if isinstance(data_value, datetime):
-            data.send_keys(data_value.strftime("%d/%m/%Y"))
-        else:
-            # Usa diretamente se já for string
-            digitar_naturalmente(data_value, data)
-        verifica_campo(data,'Data')
-        sleep(1)
-
-        codigo = driver.find_element(By.XPATH, "//input[@id='codigo']")
-        digitar_naturalmente(str(codigo_value), codigo)
-        verifica_campo(codigo, "Codigo")
-        sleep(1)
+        cadastrar_item(str(codigo_value), "//input[@id='codigo']", "Código")
 
         botao_cadastrar = driver.find_element(By.XPATH, "//button[@id='submitButton']")
         botao_cadastrar.click()
