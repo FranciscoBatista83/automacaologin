@@ -104,11 +104,9 @@ for row in sheet.iter_rows(min_row=2, values_only=True):  # Começa na linha 2
         cadastrar_item(str(quantidade_value), "//input[@id='quantidade']", "Quantidade" )
         cadastrar_item(fornecedor_value, "//input[@id='fornecedor']", "Fornecedor")
         cadastrar_item(data_value, "//input[@id='produtoData']", "Data")
-
         cadastrar_item(str(codigo_value), "//input[@id='codigo']", "Código")
 
-        botao_cadastrar = driver.find_element(By.XPATH, "//button[@id='submitButton']")
-        botao_cadastrar.click()
+        botao_cadastrar = driver.find_element(By.XPATH, "//button[@id='submitButton']").click()
         sleep(3)
 
 driver.quit()
