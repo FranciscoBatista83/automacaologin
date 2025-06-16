@@ -44,7 +44,7 @@ Este projeto realiza a automação do login em um sistema web e o cadastro de pr
    ```
 
 ## Estrutura do Projeto
-- `main.py`: Script principal com a lógica de automação.
+- `app.py`: Script principal com a lógica de automação.
 - `produtos_supermercado.xlsx`: Exemplo de planilha para cadastro de produtos.
 
 ## Contribuição
